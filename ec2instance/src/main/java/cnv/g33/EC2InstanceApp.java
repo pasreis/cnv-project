@@ -7,6 +7,15 @@ package cnv.g33;
 public class EC2InstanceApp 
 {
     public static void main( String[] args ) {
-        System.out.println( "Hello World!" );
+        RequestHandler requestHandler = new RequestHandler();
+
+        WebServer ws = new WebServer(8000, requestHandler);
+
+        try {
+            ws.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
