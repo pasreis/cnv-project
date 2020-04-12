@@ -9,9 +9,11 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>webserver</artifactId>
+  <artifactId>ec2instance</artifactId>
 
-  <name>webserver</name>
+  <name>ec2instance</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

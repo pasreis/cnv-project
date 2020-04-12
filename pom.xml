@@ -11,6 +11,7 @@
   <modules>
     <module>webserver</module>
     <module>loadbalancer</module>
+    <module>ec2instance</module>
   </modules>
 
   <name>sudokucloud</name>
