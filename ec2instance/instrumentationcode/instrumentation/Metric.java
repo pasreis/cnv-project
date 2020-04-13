@@ -1,6 +1,6 @@
 package instrumentation;
 
-import instrumentation.MetricsVisitor;
+import instrumentation.visitors.MetricsVisitor;
 
 public class Metric {
 	public void accept(MetricsVisitor v) {

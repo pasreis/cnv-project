@@ -2,6 +2,8 @@ package instrumentation;
 
 import instrumentation.dataview.InputDirectoryDataView;
 
+import instrumentation.visitors.StaticMetricsVisitor;
+
 public class InstrumentationApp {
 	public static void printHelp() {
 		System.out.println();
@@ -19,12 +21,17 @@ public class InstrumentationApp {
 			System.exit(1);
 		}
 		
+		InputDirectoryDataView inputDirectoryDataView = null;
 		try {
 			System.out.println("Analizando a diretoria: " + args[0]);
-			InputDirectoryDataView inputDirectoryDataView = new InputDirectoryDataView(args[0]);
+			inputDirectoryDataView = new InputDirectoryDataView(args[0]);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			printHelp();
+			System.exit(1);
 		}
+
+		Metric m = new Metric();
+		m.accept(new StaticMetricsVisitor(inputDirectoryDataView));
 	}
 }

@@ -46,6 +46,10 @@ public class InputDirectoryDataView {
 				}
 			}
 
+			if (_absoluteClassPaths.size() == 0) {
+				throw new IllegalArgumentException("A diretoria " + directoryName + " nao contem ficheiros .class");
+			}
+
 			System.out.println("Caminho absoluto para a diretoria " + directoryName + ": " + absoluteDirectoryPath);
 			System.out.println("A diretoria " + directoryName + " contem os seguintes ficheiros: ");
 

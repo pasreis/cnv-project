@@ -1,5 +1,7 @@
-package instrumentation;
+package instrumentation.visitors;
+
+import instrumentation.Metric;
 
 public interface MetricsVisitor {
-	void visit(Metric m);
+	public void visit(Metric m);
 }
