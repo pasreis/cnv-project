@@ -7,3 +7,4 @@
 /webserver/src/test/
 /webserver/target/
 /target/
+/ec2instance/instrumentationcode/config-bit.sh
