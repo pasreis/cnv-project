@@ -1,0 +1,1 @@
+export CLASSPATH="$CLASSPATH:/afs/ist.utl.pt/users/1/7/ist425917/Documents/MEIC/SEMESTRE2/CNV/projecto/cnv-project/ec2instance/instrumentationcode/bit/BIT:/afs/ist.utl.pt/users/1/7/ist425917/Documents/MEIC/SEMESTRE2/CNV/projecto/cnv-project/ec2instance/instrumentationcode/bit/BIT/samples:./"
