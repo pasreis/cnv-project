@@ -6,6 +6,9 @@ import instrumentation.dataview.InputDirectoryDataView;
 import instrumentation.dataview.SingleClassStaticMetricsDataView;
 import instrumentation.dataview.GlobalStaticMetricsDataView;
 
+import instrumentation.observers.StdoutObserver;
+import instrumentation.observers.Observer;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -14,7 +17,7 @@ import java.lang.NullPointerException;
 
 import BIT.highBIT.*;
 
-public class StaticMetricsVisitor implements MetricsVisitor {
+public class StaticMetricsVisitor extends MetricsVisitor {
 	private ArrayList<String> _classNames;
 
 	public StaticMetricsVisitor(InputDirectoryDataView inputDirectoryData) {
@@ -22,6 +25,8 @@ public class StaticMetricsVisitor implements MetricsVisitor {
 			throw new NullPointerException("Dados da diretoria sao null");
 		}
 		_classNames = inputDirectoryData.getAbsoluteClassPaths();
+
+		addObserver(new StdoutObserver());
 	}
 
 	@Override
@@ -50,13 +55,25 @@ public class StaticMetricsVisitor implements MetricsVisitor {
 
 			try { 
 				SingleClassStaticMetricsDataView classeDataView = new SingleClassStaticMetricsDataView(className, numberOfMethods, numberOfBasicBlocks, numberOfInstructions);
-				System.out.println(classeDataView);
+				notifyObservers(classeDataView);
 				globalDataView.addSingleClassData(classeDataView);
 			} catch (NullPointerException ex) {
 				ex.printStackTrace();
 			}
 		}
 
-		System.out.println(globalDataView);
+		notifyObservers(globalDataView);
+	}
+
+	private void notifyObservers(SingleClassStaticMetricsDataView classeDataView) {
+		for (Observer o : _observers) {
+			o.notify(classeDataView);
+		}
+	}
+
+	private void notifyObservers(GlobalStaticMetricsDataView globalDataView) {
+		for (Observer o : _observers) {
+			o.notify(globalDataView);
+		}
 	}
 }
