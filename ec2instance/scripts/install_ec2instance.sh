@@ -14,11 +14,11 @@ function CHECK_INSTALATION() {
 echo "Instalando EC2Instance..."
 
 echo "Atualizando o sistema..."
-sudo yum update
+sudo yum -y update
 echo "Atualizacao concluida!"
 
 echo $'\nInstalando o JDK...'
-sudo yum install java-1.7.0-openjdk-devel.x86_64
+sudo yum -y install java-1.7.0-openjdk-devel.x86_64
 echo "Instalacao do JDK concluida!"
 
 echo $'\nVerificando a instacalacao do JDK...'
