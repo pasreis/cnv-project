@@ -2,7 +2,7 @@
 
 TIMEOUT=120 # 2 minutes
 
-function CHECK_INSTALATION() { 
+function CHECK_INSTALATION () { 
 	# $1=EXIT_STATUS $2=ERROR_CODE $2=ERROR_MESSAGE
 	if [ $1 -eq $2 ]
 	then
@@ -24,10 +24,10 @@ echo "Instalacao do JDK concluida!"
 echo $'\nVerificando a instacalacao do JDK...'
 JDK_ERROR_MSG="Erro na instalacao do JDK. Abortando..."
 java -version > /dev/null 2>&1
-CHECK_JDK_INSTALATION $? 127 $JDK_ERROR_MSG
+CHECK_INSTALATION $? 127 $JDK_ERROR_MSG
 
 javac -version > /dev/null 2>&1
-CHECK_JDK_INSTALATION $? 127 $JDK_ERROR_MSG
+CHECK_INSTALATION $? 127 $JDK_ERROR_MSG
 echo "Instalacao do JDK foi realizada com sucesso!"
 
 echo ""
