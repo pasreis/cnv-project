@@ -32,7 +32,7 @@ echo "Instalacao do JDK foi realizada com sucesso!"
 
 echo ""
 echo "Instalando o servidor web e a aplicacao SudokuSolver"
-sudo sed -i "$ a $(pwd)/run-solver-httpserver.sh" >> /etc/rc.local
+sudo sed -i "$ a $(pwd)/run-solver-httpserver.sh" /etc/rc.local
 EXIT_STATUS=$?
 echo "Instalacao concluida!"
 
