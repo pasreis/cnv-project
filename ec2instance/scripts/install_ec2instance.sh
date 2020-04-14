@@ -2,7 +2,7 @@
 
 TIMEOUT=120 # 2 minutes
 
-function CHECK_INSTALATION () { 
+function CHECK_INSTALLATION () { 
 	# $1=EXIT_STATUS $2=ERROR_CODE $2=ERROR_MESSAGE
 	if [ $1 -eq $2 ]
 	then
@@ -24,20 +24,20 @@ echo "Instalacao do JDK concluida!"
 echo $'\nVerificando a instacalacao do JDK...'
 JDK_ERROR_MSG="Erro na instalacao do JDK. Abortando..."
 java -version > /dev/null 2>&1
-CHECK_INSTALATION $? 127 $JDK_ERROR_MSG
+CHECK_INSTALLATION $? 127 $JDK_ERROR_MSG
 
 javac -version > /dev/null 2>&1
-CHECK_INSTALATION $? 127 $JDK_ERROR_MSG
+CHECK_INSTALLATION $? 127 $JDK_ERROR_MSG
 echo "Instalacao do JDK foi realizada com sucesso!"
 
 echo ""
 echo "Instalando o servidor web e a aplicacao SudokuSolver"
-sudo echo "$(pwd)/run-solver-httpserver.sh" >> /etc/rc.local
+sudo sed -i "$ a $(pwd)/run-solver-httpserver.sh" >> /etc/rc.local
 EXIT_STATUS=$?
 echo "Instalacao concluida!"
 
 echo $'\nVerificando a Instalacao da EC2Instance...'
-CHECK_INSTALATION $EXIT_STATUS 1 "Erro na instalacao da EC2Instance. Abortando..."
+CHECK_INSTALLATION $EXIT_STATUS 1 "Erro na instalacao da EC2Instance. Abortando..."
 
 read -n 1 -t $TIMEOUT -p $'\nPressione em qualquer tecla para reiniciar...\nESC para cancelar (e necessario reiniciar)\n' KEY
 EXIT_STATUS=$?
@@ -53,5 +53,5 @@ then
 		sudo init 6
 	fi
 else
-	CHECK_INSTALATION EXIT_STATUS 128 " O reinicio foi automaticamente cancelado! Devera faze-lo manualmente!"
+	CHECK_INSTALLATION EXIT_STATUS 128 " O reinicio foi automaticamente cancelado! Devera faze-lo manualmente!"
 fi
