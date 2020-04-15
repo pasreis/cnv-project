@@ -1,9 +1,12 @@
 #!/bin/bash
 
-source ./java-config.sh
-source ./config-bit.sh
+SOURCE_DIR_INSTRUMENTED=/home/ec2-user/cnv-project/ec2instance/instrumentedcode
+SOURCE_DIR_INSTRUMENTATION=/home/ec2-user/cnv-project/ec2instance/instrumentationcode
 
-cd ..
+source ./java-config.sh
+export CLASSPATH="$CLASSPATH:$SOURCE_DIR_INSTRUMENTATION/bit/BIT:$SOURCE_DIR_INSTRUMENTATION/bit/BIT/samples:./"
+
+cd $SOURCE_DIR_INSTRUMENTED
 
 echo "Compilando..."
 make
@@ -15,10 +18,9 @@ else
 	echo "Compilacao concluida com sucesso!"
 fi
 
-cd instrumentedcode
-
 echo "Correndo o servidor web: (Ctrl+C para parar)"
-java pt.ulisboa.tecnico.cnv.server.WebServer
+export CLASSPATH=$CLASSPATH:$SOURCE_DIR_INSTRUMENTED
+java -cp ~ec2-user pt.ulisboa.tecnico.cnv.server.WebServer
 echo $'\nConcluido!'
 
 echo "Limpando os ficheiros criados..."
