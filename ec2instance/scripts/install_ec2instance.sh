@@ -2,11 +2,11 @@
 
 TIMEOUT=120 # 2 minutes
 
-function CHECK_INSTALLATION () { 
-	# $1=EXIT_STATUS $2=ERROR_CODE $2=ERROR_MESSAGE
-	if [ $1 -eq $2 ]
+function CHECK_EXIT_STATUS () { 
+	$1=EXIT_STATUS; $2=CMP_OPERATOR; $3=ERROR_CODE; $4=ERROR_MESSAGE
+	if [ $EXIT_STATUS $CMP_OPERATOR $ERROR_CODE ]
 	then
-		echo $3
+		echo $ERROR_MESSAGE
 		exit 1
 	fi
 }
@@ -24,10 +24,10 @@ echo "Instalacao do JDK concluida!"
 echo $'\nVerificando a instacalacao do JDK...'
 JDK_ERROR_MSG="Erro na instalacao do JDK. Abortando..."
 java -version > /dev/null 2>&1
-CHECK_INSTALLATION $? 127 $JDK_ERROR_MSG
+CHECK_EXIT_STATUS $? "-eq" 127 $JDK_ERROR_MSG
 
 javac -version > /dev/null 2>&1
-CHECK_INSTALLATION $? 127 $JDK_ERROR_MSG
+CHECK_EXIT_STATUS $? "-eq" 127 $JDK_ERROR_MSG
 echo "Instalacao do JDK foi realizada com sucesso!"
 
 echo $'\nCompilando o codigo do servidor web...'
@@ -35,21 +35,23 @@ INSTRUMENTED_CODE_SRC_DIR=/home/ec2-user/cnv-project/ec2instance/instrumentedcod
 cd $INSTRUMENTED_CODE_SRC_DIR
 
 make
-if [ $? -ne 0 ]
-then
-	echo "Erro na compilacao do servidor web. Abortando..."
-	exit 1
-fi
+CHECK_EXIT_STATUS $? "-ne" 0 "Erro na compilacao do servidor web. Abortando..."
 
 echo ""
 echo "Instalando o servidor web e a aplicacao SudokuSolver"
+INSTALLATION_ERROR_MSG="Erro na instalacao da EC2Instance. Abortando..."
 sudo sed -i "$ a java -cp $INSTRUMENTED_CODE_SRC_DIR pt.ulisboa.tecnico.cnv.server.WebServer" /etc/rc.local
-EXIT_STATUS=$?
+CHECK_EXIT_STATUS $? "-eq" 1 $INSTALLATION_ERROR_MSG
+
+sudo ln -sf /etc/rc.d/rc.local /etc/rc.local
+CHECK_EXIT_STATUS $? "-ne" 0 $INSTALLATION_ERROR_MSG
+
 sudo chmod +x /etc/rc.local
+CHECK_EXIT_STATUS $? "-ne" 0 $INSTALLATION_ERROR_MSG
 echo "Instalacao concluida!"
 
 echo $'\nVerificando a Instalacao da EC2Instance...'
-CHECK_INSTALLATION $EXIT_STATUS 1 "Erro na instalacao da EC2Instance. Abortando..."
+CHECK_EXIT_STATUS $EXIT_STATUS "-eq" 1 
 
 read -n 1 -t $TIMEOUT -p $'\nPressione em qualquer tecla para reiniciar...\nESC para cancelar (e necessario reiniciar)\n' KEY
 EXIT_STATUS=$?
@@ -65,5 +67,5 @@ then
 		sudo init 6
 	fi
 else
-	CHECK_INSTALLATION EXIT_STATUS 128 " O reinicio foi automaticamente cancelado! Devera faze-lo manualmente!"
+	CHECK_EXIT_STATUS EXIT_STATUS "-eq" 128 " O reinicio foi automaticamente cancelado! Devera faze-lo manualmente!"
 fi
