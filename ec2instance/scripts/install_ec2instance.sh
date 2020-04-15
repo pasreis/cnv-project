@@ -2,15 +2,6 @@
 
 TIMEOUT=120 # 2 minutes
 
-function CHECK_EXIT_STATUS () { 
-	$1=EXIT_STATUS; $2=CMP_OPERATOR; $3=ERROR_CODE; $4=ERROR_MESSAGE
-	if [ $EXIT_STATUS $CMP_OPERATOR $ERROR_CODE ]
-	then
-		echo $ERROR_MESSAGE
-		exit 1
-	fi
-}
-
 echo "Instalando EC2Instance..."
 
 echo "Atualizando o sistema..."
@@ -23,11 +14,21 @@ echo "Instalacao do JDK concluida!"
 
 echo $'\nVerificando a instacalacao do JDK...'
 JDK_ERROR_MSG="Erro na instalacao do JDK. Abortando..."
+
 java -version > /dev/null 2>&1
-CHECK_EXIT_STATUS $? "-eq" 127 $JDK_ERROR_MSG
+if [ $? -eq 127 ]
+then 
+	echo $JDK_ERROR_MSG
+	exit 1
+fi
 
 javac -version > /dev/null 2>&1
-CHECK_EXIT_STATUS $? "-eq" 127 $JDK_ERROR_MSG
+if [ $? -eq 127 ]
+then 
+	echo $JDK_ERROR_MSG
+	exit 1
+fi
+
 echo "Instalacao do JDK foi realizada com sucesso!"
 
 echo $'\nCompilando o codigo do servidor web...'
@@ -35,23 +36,38 @@ INSTRUMENTED_CODE_SRC_DIR=/home/ec2-user/cnv-project/ec2instance/instrumentedcod
 cd $INSTRUMENTED_CODE_SRC_DIR
 
 make
-CHECK_EXIT_STATUS $? "-ne" 0 "Erro na compilacao do servidor web. Abortando..."
+if [ $? -ne 0 ]
+then 
+	echo "Erro na compilacao do servidor web. Abortando..."
+	exit 1
+fi
 
 echo ""
 echo "Instalando o servidor web e a aplicacao SudokuSolver"
 INSTALLATION_ERROR_MSG="Erro na instalacao da EC2Instance. Abortando..."
-sudo sed -i "$ a java -cp $INSTRUMENTED_CODE_SRC_DIR pt.ulisboa.tecnico.cnv.server.WebServer" /etc/rc.local
-CHECK_EXIT_STATUS $? "-eq" 1 $INSTALLATION_ERROR_MSG
+
+sudo sed -i "$ a java -cp $INSTRUMENTED_CODE_SRC_DIR pt.ulisboa.tecnico.cnv.server.WebServer" /etc/rc.d/rc.local
+if [ $? -eq 1 ]
+then
+	echo $INSTALLATION_ERROR_MSG
+	exit 1
+fi
 
 sudo ln -sf /etc/rc.d/rc.local /etc/rc.local
-CHECK_EXIT_STATUS $? "-ne" 0 $INSTALLATION_ERROR_MSG
+if [ $? -eq 1 ]
+then
+	echo $INSTALLATION_ERROR_MSG
+	exit 1
+fi
 
 sudo chmod +x /etc/rc.local
-CHECK_EXIT_STATUS $? "-ne" 0 $INSTALLATION_ERROR_MSG
-echo "Instalacao concluida!"
+if [ $? -eq 1 ]
+then
+	echo $INSTALLATION_ERROR_MSG
+	exit 1
+fi
 
-echo $'\nVerificando a Instalacao da EC2Instance...'
-CHECK_EXIT_STATUS $EXIT_STATUS "-eq" 1 
+echo "Instalacao concluida com sucesso!"
 
 read -n 1 -t $TIMEOUT -p $'\nPressione em qualquer tecla para reiniciar...\nESC para cancelar (e necessario reiniciar)\n' KEY
 EXIT_STATUS=$?
