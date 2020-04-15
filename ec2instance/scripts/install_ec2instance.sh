@@ -30,10 +30,22 @@ javac -version > /dev/null 2>&1
 CHECK_INSTALLATION $? 127 $JDK_ERROR_MSG
 echo "Instalacao do JDK foi realizada com sucesso!"
 
+echo $'\nCompilando o codigo do servidor web...'
+INSTRUMENTED_CODE_SRC_DIR=/home/ec2-user/cnv-project/ec2instance/instrumentedcode
+cd $INSTRUMENTED_CODE_SRC_DIR
+
+make
+if [ $? -ne 0 ]
+then
+	echo "Erro na compilacao do servidor web. Abortando..."
+	exit 1
+fi
+
 echo ""
 echo "Instalando o servidor web e a aplicacao SudokuSolver"
-sudo sed -i "$ a /home/ec2-user/cnv-project/ec2instance/scripts/run-solver-httpserver.sh" /etc/rc.local
+sudo sed -i "$ a java -cp $INSTRUMENTED_CODE_SRC_DIR pt.ulisboa.tecnico.cnv.server.WebServer" /etc/rc.local
 EXIT_STATUS=$?
+sudo chmod +x /etc/rc.local
 echo "Instalacao concluida!"
 
 echo $'\nVerificando a Instalacao da EC2Instance...'
