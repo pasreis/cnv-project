@@ -28,6 +28,6 @@ public class InstrumentationApp {
 		}
 		
 		Metric m = new Metric(inputDirectory, outputDirectory);
-		m.accept(new LoadStore());
+		m.accept(new BranchVisitor());
 	}
 }
