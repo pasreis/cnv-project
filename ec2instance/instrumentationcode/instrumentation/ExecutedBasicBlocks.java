@@ -4,8 +4,8 @@ import java.util.Enumeration;
 
 import java.io.File;
 
-public class ExecutedMethods implements Visitor {
-    private  static int _numberOfMethods = 0;
+public class ExecutedBasicBlocks implements Visitor {
+    private static int _numberOfBasicBlocks = 0;
 
     @Override
     public void visit(Metric m) {
@@ -20,20 +20,21 @@ public class ExecutedMethods implements Visitor {
 
                 for (Enumeration e = classInfo.getRoutines().elements(); e.hasMoreElements(); ) {
                     Routine routine = (Routine) e.nextElement();
-                    routine.addBefore("ExecutedMethods", "increment", new Integer(1));
+                    BasicBlockArray basicBlockArray = routine.getBasicBlocks();
+                    routine.addBefore("ExecutedBasicBlocks", "increment", new Integer(basicBlockArray.size()));
                 }
 
-                classInfo.addAfter("ExecutedMethods", "print", classInfo.getClassName());
+                classInfo.addAfter("ExecutedBasicBlocks", "print", classInfo.getClassName()); 
                 classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
             }
         }
     }
 
     public static synchronized void increment(int increment) {
-        if (increment > 0) _numberOfMethods += increment;
+        if (increment > 0) _numberOfBasicBlocks += increment;
     }
 
     public static synchronized void print(String className) {
-        System.out.println(className + " executou " + _numberOfMethods + " metodos!");
+        System.out.println(className + " executou " + _numberOfBasicBlocks + " blocos basicos");
     }
 }

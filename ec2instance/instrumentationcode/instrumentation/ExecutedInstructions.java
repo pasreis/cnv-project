@@ -27,7 +27,7 @@ public class ExecutedInstructions implements Visitor {
 				}
 				
 				classInfo.addAfter("ExecutedInstructions", "print", classInfo.getClassName());
-				classInfo.write(m.getInputDirectory() + System.getProperty("file.separator") + fileName);
+				classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
 			}
 		}		
 	}

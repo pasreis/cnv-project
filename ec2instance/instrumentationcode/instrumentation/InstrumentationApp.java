@@ -28,6 +28,6 @@ public class InstrumentationApp {
 		}
 		
 		Metric m = new Metric(inputDirectory, outputDirectory);
-		m.accept(new ExecutedMethods());
+		m.accept(new ExecutedBasicBlocks());
 	}
 }
