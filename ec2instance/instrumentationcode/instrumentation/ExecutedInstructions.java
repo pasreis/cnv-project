@@ -38,11 +38,6 @@ public class ExecutedInstructions implements Visitor {
 	}
 
 	public static synchronized void print(String className) {
-		System.out.println(className + "executed " + _numberOfInstructions + " instructions!!");
+		System.out.println(className + "executou " + _numberOfInstructions + " instrucoes!");
 	}
-
-	public static synchronized void mcount(int i) {
-
-	}
-	
 }
