@@ -1,9 +1,8 @@
-package instrumentation;
+import BIT.highBIT.*;
 
-import instrumentation.dataview.InputDirectoryDataView;
+import java.util.Enumeration;
 
-import instrumentation.visitors.StaticMetricsVisitor;
-
+import java.io.File;
 public class InstrumentationApp {
 	public static void printHelp() {
 		System.out.println();
@@ -14,24 +13,21 @@ public class InstrumentationApp {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("CNV 2020 - Sudoku@Cloud Ferramenta de Instrumentacao:\n");
-		
 		if (args.length < 1 || args.length > 2) {
 			printHelp();
 			System.exit(1);
 		}
-		
-		InputDirectoryDataView inputDirectoryDataView = null;
-		try {
-			System.out.println("Analizando a diretoria: " + args[0]);
-			inputDirectoryDataView = new InputDirectoryDataView(args[0]);
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-			printHelp();
-			System.exit(1);
-		}
 
-		Metric m = new Metric();
-		m.accept(new StaticMetricsVisitor(inputDirectoryDataView));
+		String inputDirectory = args[0];
+		String outputDirectory;
+
+		if (args.length == 2) {
+			outputDirectory = args[1];
+		} else {
+			outputDirectory = inputDirectory;
+		}
+		
+		Metric m = new Metric(inputDirectory, outputDirectory);
+		m.accept(new ExecutedInstructions());
 	}
 }

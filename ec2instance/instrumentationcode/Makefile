@@ -13,8 +13,8 @@ bit:
 
 instr: 
 	mkdir -p $(INSTR_OUT)
-	javac $(INSTR_DIR)/*.java $(INSTR_DIR)/visitors/*.java $(INSTR_DIR)/dataview/*.java -d $(INSTR_OUT)
-
+	javac $(INSTR_DIR)/*.java -d $(INSTR_OUT)
+	
 clean:
 	rm -rf $(BIT_DIR)	
 	rm -rf $(INSTR_OUT)
