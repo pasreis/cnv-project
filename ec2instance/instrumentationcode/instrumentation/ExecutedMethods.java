@@ -23,7 +23,7 @@ public class ExecutedMethods implements Visitor {
                     routine.addBefore("ExecutedMethods", "increment", new Integer(1));
                 }
 
-                classInfo.addAfter("ExecutedMethods", "print", classInfo.getClassName());
+                classInfo.addAfter("ExecutedMethods", "notifyObserver", classInfo.getClassName());
                 classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
             }
         }
@@ -33,7 +33,8 @@ public class ExecutedMethods implements Visitor {
         if (increment > 0) _numberOfMethods += increment;
     }
 
-    public static synchronized void print(String className) {
-        System.out.println(className + " executou " + _numberOfMethods + " metodos!");
+    public static synchronized void notifyObserver(String className) {
+        String data = className + " executou " + _numberOfMethods + " metodos!";
+        Observer.notify(data);
     }
 }

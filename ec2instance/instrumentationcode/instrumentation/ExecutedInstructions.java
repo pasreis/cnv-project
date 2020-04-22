@@ -26,7 +26,7 @@ public class ExecutedInstructions implements Visitor {
 					}
 				}
 				
-				classInfo.addAfter("ExecutedInstructions", "print", classInfo.getClassName());
+				classInfo.addAfter("ExecutedInstructions", "notifyObserver", classInfo.getClassName());
 				classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
 			}
 		}		
@@ -37,7 +37,8 @@ public class ExecutedInstructions implements Visitor {
 		_numberOfInstructions += increment;
 	}
 
-	public static synchronized void print(String className) {
-		System.out.println(className + "executou " + _numberOfInstructions + " instrucoes!");
+	public static synchronized void notifyObserver(String className) {
+		String data = className + "executou " + _numberOfInstructions + " instrucoes!";
+		Observer.notify(data);
 	}
 }

@@ -70,7 +70,7 @@ public class BranchVisitor implements Visitor {
 
                 classInfo.addBefore("BranchVisitor", "setClassName", classInfo.getClassName());
                 classInfo.addBefore("BranchVisitor", "init", new Integer(total));
-                classInfo.addAfter("BranchVisitor", "print", classInfo.getClassName());
+                classInfo.addAfter("BranchVisitor", "notifyObserver", classInfo.getClassName());
                 classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
             }
         }
@@ -110,12 +110,14 @@ public class BranchVisitor implements Visitor {
         }
     }
 
-    public static synchronized void print(String className) {
+    public static synchronized void notifyObserver(String className) {
+        int totalTaken = 0, totalNotTaken = 0;
+
         for (int i = 0; i < _branchInfo.length; ++i) {
             if (_branchInfo[i] != null) {
-                System.out.println(_branchInfo[i]);
+                Observer.notify(_branchInfo[i].toString());
             }
-        }
+        }        
     }
 }
 
@@ -132,13 +134,11 @@ class BranchStructure {
         _pc = pc;
     }
 
-    public void incrementTaken() {
-        _taken++;
-    }
+    public void incrementTaken()    { _taken++; }
+    public void incrementNotTaken() { _notTaken++; }
 
-    public void incrementNotTaken() {
-        _notTaken++;
-    }
+    public int getTaken()    { return _taken; }
+    public int getNotTaken() { return _notTaken; }
 
     @Override
     public String toString() {

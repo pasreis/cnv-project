@@ -35,7 +35,7 @@ public class MemoryAllocation implements Visitor {
                     }
                 }
 
-                classInfo.addAfter("MemoryAllocation", "print", classInfo.getClassName());
+                classInfo.addAfter("MemoryAllocation", "notifyObserver", classInfo.getClassName());
                 classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
             }
         }
@@ -58,11 +58,12 @@ public class MemoryAllocation implements Visitor {
         }
     }
 
-    public static synchronized void print(String className) {
-        System.out.println(className + " executou:");
-        System.out.println("\t- " + _numberOfNewInstructions + " instrucoes \'new\'");
-        System.out.println("\t- " + _numberOfNewArrayInstructions + " instrucoes \'newarray\'");
-        System.out.println("\t- " + _numberOfANewArrayInstructions + " instrucoes \'anewarray\'");
-        System.out.println("\t- " + _numberOfMultiANewArrayInstructions + " instrucoes \'multianewarray\'");
+    public static synchronized void notifyObserver(String className) {
+        String data = className + " executou:\n" + 
+            "\t- " + _numberOfNewInstructions + " instrucoes \'new\'\n" +
+            "\t- " + _numberOfNewArrayInstructions + " instrucoes \'newarray\'\n" +
+            "\t- " + _numberOfANewArrayInstructions + " instrucoes \'anewarray\'\n" +
+            "\t- " + _numberOfMultiANewArrayInstructions + " instrucoes \'multianewarray\'";
+        Observer.notify(data);
     }
 }

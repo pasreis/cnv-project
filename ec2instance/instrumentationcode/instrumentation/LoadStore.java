@@ -45,7 +45,7 @@ public class LoadStore implements Visitor {
                     }
                 }
 
-                classInfo.addAfter("LoadStore", "print", classInfo.getClassName());
+                classInfo.addAfter("LoadStore", "notifyObserver", classInfo.getClassName());
                 classInfo.write(m.getOutputDirectory() + System.getProperty("file.separator") + fileName);
             }
         }
@@ -67,11 +67,12 @@ public class LoadStore implements Visitor {
         if (increment > 0) _numberOfRegularStores += increment;
     }
 
-    public static synchronized void print(String className) {
-        System.out.println(className + " executou:");
-        System.out.println("\t- " + _numberOfFieldLoads + " instrucoes de \'load field'");
-        System.out.println("\t- " + _numberOfFieldStores + " instrucoes de \'store field'");
-        System.out.println("\t- " + _numberOfRegularLoads  + " instrucoes de \'regular load'");
-        System.out.println("\t- " + _numberOfRegularStores + " instrucoes de \'regular store'");
+    public static synchronized void notifyObserver(String className) {
+        String data = className + " executou:\n" +
+            "\t- " + _numberOfFieldLoads + " instrucoes de \'load field'\n" +
+            "\t- " + _numberOfFieldStores + " instrucoes de \'store field'\n" +
+            "\t- " + _numberOfRegularLoads  + " instrucoes de \'regular load'\n" +
+            "\t- " + _numberOfRegularStores + " instrucoes de \'regular store'\n";
+        Observer.notify(data);
     }
 }
